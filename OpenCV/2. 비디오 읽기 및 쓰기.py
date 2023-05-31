@@ -72,3 +72,31 @@ frame_width = int(vid_capture.get(3))
 frame_height = int(vid_capture.get(4))
 frame_size = (frame_width, frame_height)
 fps = 20
+
+# 동영상 파일을 작성하기 위해 VideoWriter 개체를 생성
+# VideoWriter 개체를 생성할 때는 비디오 파일의 이름, 코덱, FPS, 프레임 크기를 지정
+# VideoWriter(filename, fourcc, fps, frame_size[, isColor])
+# filename: 비디오 파일 이름
+# fourcc: 코덱을 지정하는 4자리 코드
+# fps: 초당 프레임 수
+# frame_size: 프레임 크기
+# isColor: True이면 컬러 프레임, False이면 흑백 프레임 / 0이면 흑백 프레임, 1이면 컬러 프레임
+# VideoWriter() 비디오 작성기 개체에 대한 두 번째 인수로 필요한 4자코덱을 지정
+# VideoWriter_fourcc('M', 'J', 'P', 'G')
+# AVI 파일을 작성하려면 코덱을 지정하는 대신 fourcc = cv2.VideoWriter_fourcc(*'MJPG')를 사용할 수 있음
+# MP4 파일을 작성하려면 fourcc = cv2.VideoWriter_fourcc(*'MP4V')를 사용할 수 있음
+output = cv2.VideoWriter('videos/output.avi', cv2.VideoWriter_fourcc(*'MJPG'), fps, frame_size)
+
+# 비디오 스트림에서 프레임을 읽을 때마다 비디오 파일의 모든 프레임을 읽을 때까지 루프를 반복
+# 비디오 스트림에서 프레임을 읽고, 프레임이 성공적으로 읽혔는지 확인
+# 비디오 스트림에서 읽은 프레임을 비디오 파일에 쓰기
+while(vid_capture.isOpened()):
+  ret, frame = vid_capture.read()
+  if ret == True:
+    output.write(frame)
+  else:
+    break
+  
+# 비디오 스트림이 완전히 처리되었으면 release() 메서드를 사용하여 비디오 스트림을 닫음
+vid_capture.release()
+output.release()
